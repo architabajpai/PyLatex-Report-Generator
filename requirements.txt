@@ -1,0 +1,7 @@
+# Requirements for Beam Analysis Report Generator
+# Install with: pip install -r requirements.txt
+
+pylatex>=1.4.1
+pandas>=1.3.0
+numpy>=1.21.0
+openpyxl>=3.0.9
