@@ -13,10 +13,10 @@ def forcedata(filepath):
     try:
         df = pd.read_excel(filepath, engine='openpyxl')
         
-        # Clean column names
+        # Clean column names:
         df.columns = df.columns.str.strip()
         
-        # Validate required columns
+        # Validate required columns:
         required_columns = ['x', 'Shear force', 'Bending Moment']
         missing_columns = [col for col in required_columns if col not in df.columns]
         
@@ -25,7 +25,7 @@ def forcedata(filepath):
             print(f"Available columns: {df.columns.tolist()}")
             sys.exit(1)
         
-        # Validate data types
+        # Validate data types:
         for col in required_columns:
             if not pd.api.types.is_numeric_dtype(df[col]):
                 print(f"Error: Column '{col}' must contain numeric data")
@@ -46,12 +46,12 @@ def forcedata(filepath):
 def sfdplot(xval, sval):
     coordinates = " ".join([f"({x},{sf})" for x, sf in zip(xval, sval)])
     
-    # Calculate plot bounds with 10% margin
+    # Calculate plot bounds with 10% margin:
     smin = min(sval)
     smax = max(sval)
     srange = smax - smin
     
-    # Ensure non-zero range
+    # Ensure non zero range:
     if srange < 1e-6:
         srange = max(abs(smin), abs(smax), 1.0)
     
@@ -109,12 +109,12 @@ def sfdplot(xval, sval):
 def bmdplot(xval, bmval):
     coordinates = " ".join([f"({x},{bm})" for x, bm in zip(xval, bmval)])
     
-    # Calculate plot bounds with 10% margin
+    # Calculate plot bounds with 10% margin:
     bmmin = min(bmval)
     bmmax = max(bmval)
     bmrange = bmmax - bmmin
     
-    # Ensure non-zero range
+    # Ensure non-zero range:
     if bmrange < 1e-6:
         bmrange = max(abs(bmmin), abs(bmmax), 1.0)
     
@@ -170,18 +170,18 @@ def bmdplot(xval, bmval):
 
 
 def forcetable(df):
-    # Create table specification with centered columns
+    # Create table specification with centered columns:
     table_spec = 'c' * len(df.columns)
     
     table = Tabular(table_spec)
     table.add_hline()
     
-    # Add header row with bold formatting
+    # Add header row with bold formatting:
     header_cells = [bold(col) for col in df.columns]
     table.add_row(header_cells)
     table.add_hline()
     
-    # Add data rows with proper numeric formatting
+    # Add data rows with proper numeric formatting:
     for idx, row in df.iterrows():
         formatted_row = [f"{val:.2f}" if isinstance(val, (int, float)) else str(val) 
                         for val in row]
@@ -193,23 +193,23 @@ def forcetable(df):
 
 
 def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
-    # Read and validate data
+    # Read and validate data:
     print("Reading force data from Excel...")
     df = forcedata(excel_path)
     
-    # Extract data arrays for analysis
+    # Extract data arrays for analysis:
     xval = df['x'].values
     sval = df['Shear force'].values
     bmval = df['Bending Moment'].values
     
-    # Validate data consistency
+    # Validate data consistency:
     if len(xval) != len(sval) or len(xval) != len(bmval):
         print("Error: Data arrays have inconsistent lengths")
         return False
     
     print("Creating LaTeX document...")
     
-    # Configure document geometry
+    # Configure document geometry:
     geometry_options = {
         "head": "40pt",
         "margin": "1in",
@@ -219,7 +219,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
     
     doc = Document(geometry_options=geometry_options)
     
-    # Add required packages for professional formatting
+    # Add required packages for professional formatting:
     doc.packages.append(Package('graphicx'))
     doc.packages.append(Package('float'))
     doc.packages.append(Package('amsmath'))
@@ -229,26 +229,26 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
     doc.packages.append(Package('hyperref'))
     doc.packages.append(Package('fancyhdr'))
     
-    # Configure pgfplots compatibility
+    # Configure pgfplots compatibility:
     doc.preamble.append(NoEscape(r'\pgfplotsset{compat=1.18}'))
     
-    # Configure hyperlinks
+    # Configure hyperlinks:
     doc.preamble.append(NoEscape(r'\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}'))
     
-    # Configure headers and footers
+    # Configure headers and footers:
     doc.preamble.append(NoEscape(r'\pagestyle{fancy}'))
     doc.preamble.append(NoEscape(r'\fancyhf{}'))
     doc.preamble.append(NoEscape(r'\fancyhead[L]{Beam Analysis Report}'))
     doc.preamble.append(NoEscape(r'\fancyhead[R]{\thepage}'))
     doc.preamble.append(NoEscape(r'\fancyfoot[C]{Simply Supported Beam - Structural Analysis}'))
     
-    # Title page configuration
+    # Title page configuration:
     doc.preamble.append(Command('title', 'Beam Structural Analysis Report'))
     doc.preamble.append(Command('author', 'Engineering Analysis System'))
     doc.preamble.append(Command('date', NoEscape(r'\today')))
     doc.append(NoEscape(r'\maketitle'))
     
-    # Abstract section
+    # Abstract section:
     doc.append(NoEscape(r'\vspace{2cm}'))
     doc.append(NoEscape(r'\begin{center}'))
     doc.append(NoEscape(r'\large'))
@@ -264,11 +264,11 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
     
     doc.append(NewPage())
     
-    # Table of contents
+    # Table of contents:
     doc.append(NoEscape(r'\tableofcontents'))
     doc.append(NewPage())
     
-    # Introduction section
+    # Introduction section:
     with doc.create(Section('Introduction')):
         
         with doc.create(Subsection('Beam Description')):
@@ -279,7 +279,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
             
             doc.append(NoEscape(r'\vspace{0.5cm}'))
             
-            # Include beam configuration image if available
+            # Include beam configuration image if available:
             if os.path.exists(beam_image_path):
                 with doc.create(Figure(position='H')) as fig:
                     fig.add_image(beam_image_path, width=NoEscape(r'0.8\textwidth'))
@@ -320,7 +320,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
     
     doc.append(NewPage())
     
-    # Input data section with force table
+    # Input data section with force table:
     with doc.create(Section('Input Data')):
         doc.append('The following table presents the complete force and moment data extracted from '
                   'the Excel file. The data includes position coordinates along the beam (x), '
@@ -335,7 +335,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
         
         doc.append(NoEscape(r'\vspace{0.5cm}'))
         
-        # Add data summary statistics
+        # Add data summary statistics:
         with doc.create(Subsection('Data Summary')):
             doc.append('Statistical summary of the extracted data:')
             doc.append(NoEscape(r'\vspace{0.3cm}'))
@@ -361,7 +361,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
     
     doc.append(NewPage())
     
-    # Structural analysis section with diagrams
+    # Structural analysis section with diagrams:
     with doc.create(Section('Structural Analysis')):
         
         doc.append('This section presents the graphical analysis of the beam through Shear Force '
@@ -384,7 +384,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
             doc.append(NoEscape(r'\item Maximum positive shear force: ' + f'{max(sval):.2f} kN'))
             doc.append(NoEscape(r'\item Maximum negative shear force: ' + f'{min(sval):.2f} kN'))
             
-            # Find zero crossing point
+            # Find zero crossing point:
             zero_crossing_idx = np.argmin(np.abs(sval))
             doc.append(NoEscape(r'\item Zero shear occurs at: ' + f'{xval[zero_crossing_idx]:.2f} m'))
             doc.append(NoEscape(r'\end{itemize}'))
@@ -436,7 +436,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
                                'values at the beam ends.'))
             doc.append(NoEscape(r'\end{enumerate}'))
     
-    # Engineering interpretation section
+    # Engineering interpretation section:
     doc.append(NewPage())
     with doc.create(Section('Engineering Interpretation')):
         
@@ -476,7 +476,7 @@ def reportgen(excel_path, beam_image_path, output_pdf='output.pdf'):
                                'based on the shear force values at beam ends.'))
             doc.append(NoEscape(r'\end{itemize}'))
     
-    # Conclusion section
+    # Conclusion section:
     doc.append(NewPage())
     with doc.create(Section('Conclusion')):
         doc.append('This report has presented a comprehensive structural analysis of a simply supported beam, '
