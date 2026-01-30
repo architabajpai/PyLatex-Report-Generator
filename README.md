@@ -12,8 +12,8 @@ This application automates the creation of structural analysis reports for simpl
 - TikZ/pgfplots vector graphics for SFD and BMD diagrams
 - LaTeX-based tables with selectable text (not embedded images)
 - Automated structural analysis calculations
+- Command-line argument support for flexible usage
 - Comprehensive error handling and validation
-
 
 ## Requirements
 
@@ -78,19 +78,30 @@ pdflatex --version      # Should show LaTeX version information
 ### Basic Usage
 
 ```bash
-python docGenerator.py
+python beam_analysis_report.py
 ```
 
 This command will:
-1. Read force data from the specified Excel file
-2. Embed the beam diagram image
+1. Read force data from `force_table.xlsx`
+2. Embed the beam diagram image from `ssbeam.png`
 3. Generate a PDF report named `output.pdf`
 
+### Command-Line Arguments
+
+```bash
+python beam_analysis_report.py -e data.xlsx -i beam.png -o report.pdf
+```
+
+**Available options:**
+- `-e, --excel`: Path to Excel file with force data (default: force_table.xlsx)
+- `-i, --image`: Path to beam configuration image (default: ssbeam.png)
+- `-o, --output`: Output PDF filename (default: output.pdf)
+- `-v, --verbose`: Enable verbose output
 
 ### Display Help Information
 
 ```bash
-python docGenerator.py --help
+python beam_analysis_report.py --help
 ```
 
 ## Input Data Format
@@ -143,7 +154,11 @@ The generated PDF report contains the following sections:
 - Embedded beam diagram image
 - Description of support conditions
 
-**3.2 Data Source**
+**3.2 Analysis Methodology**
+- Description of structural analysis approach
+- Step-by-step methodology
+
+**3.3 Data Source**
 - Excel file information
 - Number of data points
 - Beam length specification
@@ -152,6 +167,10 @@ The generated PDF report contains the following sections:
 - Complete force and moment data table
 - LaTeX-formatted tabular environment (selectable text)
 - Professional table styling with horizontal rules
+
+**4.1 Data Summary**
+- Statistical summary of extracted data
+- Shear force and bending moment statistics
 
 ### 5. Structural Analysis
 **5.1 Shear Force Diagram (SFD)**
@@ -172,11 +191,21 @@ The generated PDF report contains the following sections:
 - Structural behavior characteristics
 - Design considerations
 
-### 6. Conclusion
+### 6. Engineering Interpretation
+**6.1 Critical Sections**
+- Location and magnitude of maximum bending moment
+- Location and magnitude of maximum shear force
+
+**6.2 Design Implications**
+- Flexural capacity requirements
+- Shear resistance considerations
+- Support design requirements
+
+### 7. Conclusion
 - Summary of analysis findings
 - Engineering implications
 - Design recommendations
-
+- Report generation timestamp
 
 ## Troubleshooting
 
@@ -243,8 +272,8 @@ The application consists of the following main components:
 
 **Data Processing Module**
 - Excel file reading and validation
-- Google Sheets URL conversion
-- Data structure verification
+- Column and data type verification
+- Input file existence checks
 
 **Table Generation Module**
 - LaTeX Tabular environment creation
@@ -275,12 +304,12 @@ The application consists of the following main components:
 ### Code Quality Standards
 
 - PEP 8 compliant Python code
-- Comprehensive function documentation
-- Type hints for function parameters
-- Error handling and validation
+- Comprehensive function documentation with docstrings
+- Command-line argument support (argparse)
+- Enhanced error handling and validation
+- Input file existence checks
 - Modular function design
 - Clear variable naming conventions
-
 
 ## License
 
@@ -305,13 +334,19 @@ Developed as part of the FOSSEE Osdag screening task initiative. This project de
 
 This project was created for educational and assessment purposes. For questions or issues related to the FOSSEE Osdag screening task, please refer to the official communication channels.
 
-
 ## Version History
+
+**Version 2.0.0** (January 2026)
+- Added command-line argument support
+- Enhanced error handling and validation
+- Added engineering interpretation section
+- Improved documentation with comprehensive docstrings
+- Added data summary statistics
+- Enhanced report structure with methodology section
 
 **Version 1.0.0** (January 2026)
 - Initial release
 - Core functionality implementation
 - TikZ/pgfplots diagram generation
 - LaTeX table creation
-- Command-line interface
 - Documentation and examples
