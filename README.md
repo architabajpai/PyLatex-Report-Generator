@@ -78,7 +78,7 @@ pdflatex --version      # Should show LaTeX version information
 ### Basic Usage
 
 ```bash
-python beam_analysis_report.py
+python docGenerator.py
 ```
 
 This command will:
@@ -89,7 +89,7 @@ This command will:
 ### Command-Line Arguments
 
 ```bash
-python beam_analysis_report.py -e data.xlsx -i beam.png -o report.pdf
+python docGenerator.py -e force_table.xlsx -i ssbeam.png -o output.pdf
 ```
 
 **Available options:**
@@ -101,7 +101,7 @@ python beam_analysis_report.py -e data.xlsx -i beam.png -o report.pdf
 ### Display Help Information
 
 ```bash
-python beam_analysis_report.py --help
+python docGenerator.py --help
 ```
 
 ## Input Data Format
