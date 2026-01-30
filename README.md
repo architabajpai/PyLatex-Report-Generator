@@ -12,8 +12,6 @@ This application automates the creation of structural analysis reports for simpl
 - TikZ/pgfplots vector graphics for SFD and BMD diagrams
 - LaTeX-based tables with selectable text (not embedded images)
 - Automated structural analysis calculations
-- Google Sheets integration support
-- Command-line interface for automation
 - Comprehensive error handling and validation
 
 
@@ -80,30 +78,19 @@ pdflatex --version      # Should show LaTeX version information
 ### Basic Usage
 
 ```bash
-python beam_report.py --excel force_data.xlsx --image beam_image.jpg
+python docGenerator.py
 ```
 
 This command will:
 1. Read force data from the specified Excel file
 2. Embed the beam diagram image
-3. Generate a PDF report named `beam_analysis_report.pdf`
+3. Generate a PDF report named `output.pdf`
 
-### Custom Output Filename
-
-```bash
-python beam_report.py --excel data.xlsx --image beam.png --output custom_report.pdf
-```
-
-### Using Google Sheets
-
-```bash
-python beam_report.py --url "https://docs.google.com/spreadsheets/d/SHEET_ID/edit" --image beam.jpg
-```
 
 ### Display Help Information
 
 ```bash
-python beam_report.py --help
+python docGenerator.py --help
 ```
 
 ## Input Data Format
@@ -190,49 +177,6 @@ The generated PDF report contains the following sections:
 - Engineering implications
 - Design recommendations
 
-## Command-Line Options
-
-| Option | Short | Description | Default |
-|--------|-------|-------------|---------|
-| `--excel` | `-e` | Path to Excel file containing force data | force_data.xlsx |
-| `--image` | `-i` | Path to beam diagram image file | beam_image.jpg |
-| `--output` | `-o` | Output PDF filename | beam_analysis_report.pdf |
-| `--url` | `-u` | Google Sheets URL (alternative to --excel) | None |
-| `--help` | `-h` | Display help information | N/A |
-
-## Examples
-
-### Example 1: Standard Report Generation
-
-```bash
-python beam_report.py --excel force_data.xlsx --image beam_image.jpg
-```
-
-### Example 2: Custom Output Location
-
-```bash
-python beam_report.py \
-  --excel /path/to/data.xlsx \
-  --image /path/to/image.png \
-  --output /output/directory/report.pdf
-```
-
-### Example 3: Using Google Sheets Data
-
-```bash
-python beam_report.py \
-  --url "https://docs.google.com/spreadsheets/d/1PPpTbb5lWwlscfanzDP5L0e-KsyNcUIj9I_s00OP7mA/edit" \
-  --image beam_diagram.jpg
-```
-
-### Example 4: Windows Full Path
-
-```cmd
-python beam_report.py ^
-  --excel "C:\Projects\Data\forces.xlsx" ^
-  --image "C:\Projects\Images\beam.jpg" ^
-  --output "C:\Reports\analysis_report.pdf"
-```
 
 ## Troubleshooting
 
